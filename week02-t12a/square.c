@@ -6,6 +6,7 @@ int main(void) {
     printf("Enter a number: ");
     scanf("%d", &x);
     y = x * x;
-    printf("%d\n", y);
+    printf("%d", y);
+    putchar('\n');
     return 0;
 }
