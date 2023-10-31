@@ -18,6 +18,7 @@ fac_loop__cond:
 
 fac_loop__body:
     fac *= i;
+    // fac = fac * i;
 
 fac_loop__step:
     i++;
