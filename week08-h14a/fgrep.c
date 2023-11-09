@@ -20,12 +20,12 @@
 // ./fgrep test testfile.txt
 // testfile.txt: 1: This is a test
 //
-// Assume lines are 65536 bytes at most.
+// Assume lines are 65535 bytes at most.
 
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_LINE 65536
+#define MAX_LINE 65535
 
 void search_stream(FILE *stream, char stream_name[], char search_for[]);
 
@@ -38,12 +38,16 @@ int main(int argc, char *argv[]) {
         search_stream(stdin, "<stdin>", argv[1]);
     } else {
 
-        for(int argument = 2; argument < argc; argument = argument + 1) {
-            FILE *in = fopen(argv[argument], "r");
+        for (int argument = 2; argument < argc; argument = argument + 1) {
+            FILE *stream = fopen(argv[argument], "r");
             // TODO: handle errors
+            if (stream == NULL) {
+                perror(argv[argument]);
+                continue;
+            }
 
-            search_stream(in, argv[argument], argv[1]);
-            fclose(in);
+            search_stream(stream, argv[argument], argv[1]);
+            fclose(stream);
         }
 
     }
@@ -54,4 +58,14 @@ int main(int argc, char *argv[]) {
 void search_stream(FILE *stream, char stream_name[], char search_for[]) {
     // TODO: complete this function
     // hint: look at `strstr(3)'
+
+    char line[MAX_LINE + 1];
+    int line_num = 1;
+
+    while (fgets(line, MAX_LINE + 1, stream) != NULL) {
+        if (strstr(line, search_for) != NULL) {
+            printf("%s: %d: %s", stream_name, line_num, line);
+        }
+        line_num++;
+    }
 }
